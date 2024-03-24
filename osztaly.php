@@ -121,6 +121,102 @@ class Osztaly{
 
         }
 
+        public function getInfoStore($id)
+        {
+            $result = $this->mysqli->query("SELECT id_store FROM products WHERE id = $id");
+            $stores = $result->fetch_assoc();
+            if (isset($stores['id_store'])) {
+                return $this->getStoreById($stores['id_store']);    
+            }
+            return "";
+        }
+
+        public function getInfoRow($id)
+        {
+            $result = $this->mysqli->query("SELECT id_row FROM products WHERE id = $id");
+            $rows = $result->fetch_assoc();
+            if (isset($rows['id_row'])) {
+                return $this->getRows($rows['id_row']);    
+            }
+            return "";
+        }
+
+        public function getInfoCol($id)
+        {
+            $result = $this->mysqli->query("SELECT id_column FROM products WHERE id = $id");
+            $columns = $result->fetch_assoc();
+            if (isset($columns['id_column'])) {
+                return $this->getColls($columns['id_column']);    
+            }
+            return "";
+        }
+
+        public function getInfoShelf($id)
+        {
+            $result = $this->mysqli->query("SELECT id_shelf FROM products WHERE id = $id");
+            $shelves = $result->fetch_assoc();
+            if (isset($shelves['id_shelf'])) {
+                return $this->getShelves($shelves['id_shelf']);    
+            }
+            return "";
+        }
+
+        public function getInfoName($id){
+            $result = $this->mysqli->query("SELECT name FROM products WHERE id = $id");
+            $names = $result->fetch_assoc();
+            if (isset($names['name'])) {
+                return $names['name'];    
+            }
+            return "";
+        }
+
+        public function getInfoPrice($id){
+            $result = $this->mysqli->query("SELECT price FROM products WHERE id = $id");
+            $prices = $result->fetch_assoc();
+            if (isset($prices['price'])) {
+                return $prices['price'];    
+            }
+            return "";
+        }
+        public function getInfoQuantity($id){
+            $result = $this->mysqli->query("SELECT quantity FROM products WHERE id = $id");
+            $quantities = $result->fetch_assoc();
+            if (isset($quantities['quantity'])) {
+                return $quantities['quantity'];
+            }
+            return "";
+        }
+        public function getInfoMin($id){
+            $result = $this->mysqli->query("SELECT min_quantity FROM products WHERE id = $id");
+            $mins = $result->fetch_assoc();
+            if (isset($mins['min_quantity'])) {
+                return $mins['min_quantity'];
+            }
+            return "";
+        }
+
+        public function update($id,$raktar,$sor,$oszlop,$polc,$nev,$ar,$db,$minDb){
+
+            $query="UPDATE products SET id_store=$raktar,id_row=$sor,id_column=$oszlop,id_shelf=$polc,name='$nev',price=$ar,quantity=$db,min_quantity=$minDb WHERE id =$id ";
+
+            if ($this->mysqli->query($query) == TRUE) {
+                echo "Az adatok sikeresen feltöltve.";
+            }
+            else {
+                echo "Hiba az adatok feltöltése közben.". $this->mysqli->error;
+            }
+        }
+
+        public function delete($id){
+            $query = "DELETE FROM products WHERE id=$id;";
+            
+            if ($this->mysqli->query($query) == TRUE) {
+                echo "Az adatokat sikeresen töröltük.";
+            }
+            else {
+                echo "Hiba az adatok törlése közben.". $this->mysqli->error;
+            }
+        }
 }
 
 ?>

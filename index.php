@@ -19,6 +19,7 @@
     ?>
     <div class="container">
         <div class="half">
+            <h2 class="alcim">Raktarok</h2>
             <?php
                 $epuletek = $tabla->getStores();
 
@@ -33,6 +34,7 @@
             ?>
         </div>
         <div class="half">
+            <h2 class="alcim">Termekek</h2>
             <?php
             if (isset($_POST['store_buttons'])) {
                 $id = $_POST['store_buttons'];
@@ -82,6 +84,7 @@
             ?>
         </div>
         <div class="half">
+            <h2 class="alcim">Leltár</h2>
             <?php
                 if (isset($_POST['leltar'])) {
                     $storeId = $_POST['raktarokOpciok'];
@@ -152,9 +155,164 @@
         </div>
         <div class="half">
             <h2 class="alcim">Módosítás</h2>
+
+            <div class="half_container">
+                <div class="half">
+                    <?php
+                        $epuletek = $tabla->getStores();
+
+                        foreach ($epuletek as $epulet) {
+                            echo '<form method="POST" action="">'
+                            .'<tr>'
+                                .'<td> <button  class="button" value="'.$epulet['id'].'" name="edit_buttons">'.$epulet['name'].'</button> </td>'
+                                . '<td><div style="display: flex">'
+                                . '</div></td>'
+                            . '</tr></form>';
+                        }
+                    ?>
+                </div>
+                <div class="half">
+                    <?php
+                        if (isset($_POST['edit_buttons'])) {
+                            $id = $_POST['edit_buttons'];
+                            $termekek = $tabla->getProductsById($id);
+            
+                            if (!empty($termekek)) {
+                                foreach ($termekek as $termek)
+                                {
+                                    echo '<form method="POST" action="">'
+                                    .'<tr>'
+                                    .'<td> <button  class="button" value="'.$termek['id'].'" name="edit_products">'.$termek['name'].'</button> </td>'
+                                    . '<td><div style="display: flex">'
+                                    . '</div></td>'
+                                    .'</tr></form>';  
+                                }
+                            }
+                        }
+
+                        if (isset($_POST['edit_products'])) {
+                            $id = $_POST['edit_products'];
+                            echo '<form method="POST" action=""><select class="custom-select" name="raktarokE">';
+                            foreach ($raktarok as $raktar) {
+                                if ($raktar['name'] == $tabla->getInfoStore($id)) {
+                                    echo '<option value="'.$raktar['id'].'" selected>'.$raktar['name'].'</option>';
+                                }
+                                else {
+                                    echo '<option value="'.$raktar['id'].'" >'.$raktar['name'].'</option>';
+                                }
+                                
+                            }
+                            echo '</select><br>';
+                            echo '<select class="custom-select" name="sorokE">';
+                            foreach ($sorok as $sor) {
+                                if ($sor['name'] == $tabla->getInfoRow($id)) {
+                                    echo '<option value="'.$sor['id'].'" selected>'.$sor['name'].'</option>';
+                                }
+                                else {
+                                    echo '<option value="'.$sor['id'].'">'.$sor['name'].'</option>';
+                                }
+                                
+                            }
+                            echo '</select><br>';
+                            echo '<select class="custom-select" name="oszlopokE">';
+                            foreach ($oszlopok as $oszlop) {
+                                if ($oszlop['name'] == $tabla->getInfoCol($id)) {
+                                    echo '<option value="'.$oszlop['id'].'" selected>'.$oszlop['name'].'</option>';
+                                }
+                                else {
+                                    echo '<option value="'.$oszlop['id'].'">'.$oszlop['name'].'</option>';
+                                }
+                            }
+                            echo '</select><br>';
+                            echo '<select class="custom-select" name="polcokE">';
+                            foreach ($polcok as $polc) {
+                                if ($polc['name'] == $tabla->getInfoShelf($id)) {
+                                    echo '<option value="'.$polc['id'].'" selected>'.$polc['name'].'</option>';
+                                }
+                                else {
+                                    echo '<option value="'.$polc['id'].'">'.$polc['name'].'</option>';
+                                }
+                            }
+                            echo '</select><br>';
+                            echo'<input type="text" value="'.$tabla->getInfoName($id).'" id="editName" name="editName" placeholder="Termék neve"><br>
+                                <input type="number" value="'.$tabla->getInfoPrice($id).'" id="editPrice" name="editPrice" placeholder="Termék ára"><br>
+                                <input type="number" value="'.$tabla->getInfoQuantity($id).'" id="editQuantity" name="editQuantity" placeholder="Darabszáma"><br>
+                                <input type="number" value="'.$tabla->getInfoMin($id).'" id="editMin" name="editMin" placeholder="Minimum mennyiség"><br>';
+                                
+                            echo '<button class="button" type="submit" name="save">Adatok mentése</button></form>';
+
+                            if (isset($_POST['save'])) {
+                                $id = $_POST['edit_products'];
+                                $raktarE = $_POST['raktarokE'];
+                                $sorE = $_POST['sorokE'];
+                                $oszlopE = $_POST['oszlopokE'];
+                                $polcE = $_POST['polcokE'];
+                                $nevE = $_POST['editName'];
+                                $arE = $_POST['editPrice'];
+                                $dbE = $_POST['editQuantity'];
+                                $minE = $_POST['editMin'];
+            
+                                $tabla->update($id,$raktarE,$sorE,$oszlopE,$polcE,$nevE,$arE,$dbE,$minE);
+                            }
+
+                        }
+                        else {
+                            echo"";
+                        }
+
+
+
+
+                    ?>
+                </div>
+
+            </div>
         </div>
         <div class="half">
             <h2 class="alcim">Törlés</h2>
+            <div class="half_container">
+                <div class="half">
+                    <?php
+                        $epuletek = $tabla->getStores();
+
+                        foreach ($epuletek as $epulet) {
+                            echo '<form method="POST" action="">'
+                            .'<tr>'
+                                .'<td> <button  class="button" value="'.$epulet['id'].'" name="delete_buttons">'.$epulet['name'].'</button> </td>'
+                                . '<td><div style="display: flex">'
+                                . '</div></td>'
+                            . '</tr></form>';
+                        }
+                    ?>
+                </div>
+                <div class="half">
+                    <?php
+                        if (isset($_POST['delete_buttons'])) {
+                            $id = $_POST['delete_buttons'];
+                            $termekek = $tabla->getProductsById($id);
+            
+                            if (!empty($termekek)) {
+                                foreach ($termekek as $termek)
+                                {
+                                    echo '<form method="POST" action="">'
+                                    .'<tr>'
+                                    .'<td> <button  class="button" value="'.$termek['id'].'" name="delete_produtcs">'.$termek['name'].'</button> </td>'
+                                    . '<td><div style="display: flex">'
+                                    . '</div></td>'
+                                    .'</tr></form>';  
+                                }
+                            }
+    
+                        }
+
+                        if (isset($_POST['delete_produtcs'])) {
+                            $id = $_POST['delete_produtcs'];
+                            $tabla->delete($id);
+                        }
+                    ?>
+                </div>
+
+            </div>
         </div>
     </div>
 </body>
