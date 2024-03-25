@@ -197,6 +197,8 @@ class Osztaly{
 
         public function update($id,$raktar,$sor,$oszlop,$polc,$nev,$ar,$db,$minDb){
 
+            //echo "TESZT";
+
             $query="UPDATE products SET id_store=$raktar,id_row=$sor,id_column=$oszlop,id_shelf=$polc,name='$nev',price=$ar,quantity=$db,min_quantity=$minDb WHERE id =$id ";
 
             if ($this->mysqli->query($query) == TRUE) {
@@ -216,6 +218,13 @@ class Osztaly{
             else {
                 echo "Hiba az adatok törlése közben.". $this->mysqli->error;
             }
+        }
+
+        public function kifogyo():array
+        {
+            $query = "SELECT * FROM `products` WHERE min_quantity>=quantity";
+            
+            return $this->mysqli->query($query)->fetch_all(MYSQLI_ASSOC);
         }
 }
 

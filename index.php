@@ -41,14 +41,9 @@
                 $termekek = $tabla->getProductsById($id);
 
                 if (!empty($termekek)) {
-                    $sv = 0;
                     foreach ($termekek as $termek)
                     {
-                        if ($sv<1) {
-                            $store = $tabla->getStoreById($termek['id_store']);
-                            echo '<td class="alcim">'.$store.' </td><br>';
 
-                        } 
                             echo '<form method="POST" action="">'
                             .'<tr>'
                                 .'<td>'.$termek['name'].' </td>'
@@ -58,7 +53,6 @@
                                 . '</div></td>'
                             . '</tr></form>';
 
-                        $sv+=1;
                             
                     }
                 }
@@ -175,6 +169,7 @@
                     <?php
                         if (isset($_POST['edit_buttons'])) {
                             $id = $_POST['edit_buttons'];
+                            $idJ =$_POST['edit_buttons'];
                             $termekek = $tabla->getProductsById($id);
             
                             if (!empty($termekek)) {
@@ -237,12 +232,20 @@
                             echo'<input type="text" value="'.$tabla->getInfoName($id).'" id="editName" name="editName" placeholder="Termék neve"><br>
                                 <input type="number" value="'.$tabla->getInfoPrice($id).'" id="editPrice" name="editPrice" placeholder="Termék ára"><br>
                                 <input type="number" value="'.$tabla->getInfoQuantity($id).'" id="editQuantity" name="editQuantity" placeholder="Darabszáma"><br>
-                                <input type="number" value="'.$tabla->getInfoMin($id).'" id="editMin" name="editMin" placeholder="Minimum mennyiség"><br>';
+                                <input type="number" value="'.$tabla->getInfoMin($id).'" id="editMin" name="editMin" placeholder="Minimum mennyiség"><br>
+                                <input type="hidden" value="'.$id.'" name="hidden_id">';
                                 
                             echo '<button class="button" type="submit" name="save">Adatok mentése</button></form>';
 
+
+
+                        }
+                        else {
+                            echo"";
+                        }
+
                             if (isset($_POST['save'])) {
-                                $id = $_POST['edit_products'];
+                                $idJ = $_POST['hidden_id'];
                                 $raktarE = $_POST['raktarokE'];
                                 $sorE = $_POST['sorokE'];
                                 $oszlopE = $_POST['oszlopokE'];
@@ -252,15 +255,8 @@
                                 $dbE = $_POST['editQuantity'];
                                 $minE = $_POST['editMin'];
             
-                                $tabla->update($id,$raktarE,$sorE,$oszlopE,$polcE,$nevE,$arE,$dbE,$minE);
+                                $tabla->update($idJ,$raktarE,$sorE,$oszlopE,$polcE,$nevE,$arE,$dbE,$minE);
                             }
-
-                        }
-                        else {
-                            echo"";
-                        }
-
-
 
 
                     ?>
@@ -314,6 +310,34 @@
 
             </div>
         </div>
+    </div>
+    <div class="container">
+        <div class="half">
+            <h2 class="alcim">Kifogyó termékek</h2>
+            
+            <?php
+                echo '<form method="POST" action=""><button class="button" type="submit" name="kifogyok">Adatok kilistázása</button></form>';
+
+                $kifogyok = $tabla->kifogyo();
+
+                if (isset($_POST['kifogyok'])) {
+                    foreach ($kifogyok as $kifogyo) {
+                        echo '<form method="POST" action="">'
+                                .'<tr>'
+                                    .'<td>'.$kifogyo['name'].' </td>'
+                                    .'<td>'.$kifogyo['quantity'].'db </td>'
+                                    .'/<td>'.$kifogyo['min_quantity'].' MIN</td>'
+                                    . '<td><div style="display: flex">'
+                                    . '</div></td>'
+                                . '</tr></form>';
+    
+                    }
+                }
+
+            ?>
+
+        </div>
+        
     </div>
 </body>
 </html>
