@@ -226,6 +226,45 @@ class Osztaly{
             
             return $this->mysqli->query($query)->fetch_all(MYSQLI_ASSOC);
         }
+
+        public function dropTable($name)
+        {
+            $query = "DROP TABLE IF EXISTS $name";
+        
+            if ($this->mysqli->query($query) === TRUE) {
+                echo "Az adatokat sikeresen töröltük.";
+            } else {
+                echo "Hiba az adatok törlése közben: " . $this->mysqli->error;
+            }
+        }
+        public function import($name, $files)
+        {
+            
+            if (isset($_POST["import"])) {
+                $file = $_FILES[$files]["tmp_name"];
+                $handle = fopen($file, "r");
+                
+                $header = fgetcsv($handle);
+            
+                while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+                    $sql = "INSERT INTO $name (oszlop1, oszlop2, oszlop3) VALUES (?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sss", $row[0], $row[1], $row[2]);
+                    $stmt->execute();
+            
+                    if ($stmt->affected_rows > 0) {
+                        echo "Sikeres importálás";
+                    } else {
+                        echo "Hiba: " . $sql . "<br>" . $conn->error;
+                    }
+                    
+                    $stmt->close();
+                }
+                
+                fclose($handle);
+            }
+
+        }
 }
 
 ?>
